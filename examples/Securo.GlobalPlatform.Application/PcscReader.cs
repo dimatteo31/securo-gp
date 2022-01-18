@@ -41,11 +41,12 @@ namespace Securo.GlobalPlatform.Application
 
         public CardResponse Send(string apdu)
         {
-            log.Info($"TX:{apdu}");
+            apdu = apdu.ToUpper();
+            log.Info($"TX-Wrap \t-> {apdu}");
             var buff = new byte[258];
             var len = cardReader.Transmit(Hex.Decode(apdu), buff);
             var resp = buff.Take(len).ToArray();
-            log.Info($"RX:{Hex.ToHexString(resp.Take(resp.Length).ToArray())}");
+            log.Info($"RX-Wrap \t<- {Hex.ToHexString(resp.Take(resp.Length).ToArray()).ToUpper()}");
 
             return new CardResponse()
             {

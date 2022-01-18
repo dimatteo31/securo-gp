@@ -13,7 +13,7 @@ namespace Securo.GlobalPlatform.Commands
         public SelectApduCommand(byte p1, byte p2, string aid)
         {
             this.Class = 0x00;
-            this.Instruction = (byte)CmdIns.Select;
+            this.Instruction = (byte)InstructionCode.Select;
             this.P1 = p1;
             this.P2 = p2;
             this.Aid = Hex.Decode(aid);

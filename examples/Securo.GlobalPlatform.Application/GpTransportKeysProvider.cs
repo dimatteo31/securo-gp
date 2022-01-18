@@ -15,4 +15,19 @@ namespace Securo.GlobalPlatform.Application
             };
         }
     }
+
+    public class CustomKeysProvider : IGpMasterKeysProvider
+    {
+        private KeySet keySet;
+
+        public CustomKeysProvider(string enc, string mac, string dek)
+        {
+            this.keySet = new KeySet() { EncryptionKey = enc, MacKey = mac, KeyEncryptionKey = dek };
+        }
+
+        public KeySet Provide()
+        {
+            return this.keySet;
+        }
+    }
 }

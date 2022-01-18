@@ -13,7 +13,7 @@ namespace Securo.GlobalPlatform.Commands
         public InitalizeUpdateCommand(byte p1, byte p2, string cardChallenge)
         {
             this.Class = 0x80;
-            this.Instruction = (byte)CmdIns.InitializeUpdate;
+            this.Instruction = (byte)InstructionCode.InitializeUpdate;
             this.P1 = p1;
             this.P2 = p2;
             this.CardChallenge = Hex.Decode(cardChallenge);
