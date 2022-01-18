@@ -13,7 +13,7 @@ namespace Securo.GlobalPlatform.Commands
         public ExternalAuthenticateCommand(byte p1, string hostCryptogramWithCmac)
         {
             this.Class = 0x84;
-            this.Instruction = (byte)CmdIns.ExternalAuthenticate;
+            this.Instruction = (byte)InstructionCode.ExternalAuthenticate;
             this.P1 = p1;
             this.P2 = 0x00;
             this.HostCryptogramWithCmac = Hex.Decode(hostCryptogramWithCmac);

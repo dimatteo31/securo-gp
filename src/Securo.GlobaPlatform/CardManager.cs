@@ -23,18 +23,6 @@ namespace Securo.GlobalPlatform
         public string Aid { get; private set; }
 
         public CardManager(
-            IApduTransmit apduTransmit, 
-            ISecureContextProvider secureContextProvider)
-        {
-            this.apduTransmit = apduTransmit;
-            this.secureContextProvider = secureContextProvider;
-            this.secureSessionDetailsCreator = new SecureSessionDetailsCreator();
-            this.scpInfoProvider = new ScpInfoProvider();
-            this.cardResponseParser = new CardResponseParser();
-            this.secureContextProviderFactory = new SecureContextProviderFactory(null);
-        }
-
-        public CardManager(
           IApduTransmit apduTransmit,
           IGpMasterKeysProvider gpMasterKeysProvider)
         {
@@ -127,7 +115,7 @@ namespace Securo.GlobalPlatform
 
         public CardResponse TransmitApdu(SecurityLevel securityLevel, string command)
         {
-            log.Info($"TX-Plain:{command}");
+            log.Info($"TX-Plain -> {command}");
             var wrappedCommand = this.secureContextProvider.Wrap(securityLevel, command).Result;
             var cardResponse = this.apduTransmit.Send(wrappedCommand);
             if (cardResponse.StatusWord != 0x9000)
@@ -136,8 +124,8 @@ namespace Securo.GlobalPlatform
             }
             else
             {
-                var unwrappedResponse = this.secureContextProvider.Unwrap(securityLevel, cardResponse.FullResponse).Result;
-                log.Info($"RX-Plain:{unwrappedResponse}");
+                var unwrappedResponse = this.secureContextProvider.Unwrap(securityLevel, cardResponse.FullResponse).Result.ToUpper();
+                log.Info($"RX-Plain -> {unwrappedResponse}");
                 return this.cardResponseParser.Parse(unwrappedResponse);
             }
         }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Securo.GlobalPlatform.Application": {
+      "commandName": "Project",
+      "commandLineArgs": "--script script.txt"
+    }
+  }
+}
