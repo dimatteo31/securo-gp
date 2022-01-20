@@ -23,7 +23,8 @@ namespace Securo.GlobalPlatform.SecureMessaging
                     {
                         CardChallenge = details.CardChallenge,
                         SequenceCounter = details.SequenceCounter,
-                        ScpInfo = new ScpInfo() { ScpIdentifier = (byte)ScpMode.Scp02 }
+                        ScpInfo = new ScpInfo() { ScpIdentifier = (byte)ScpMode.Scp02 },
+                        CardCryptogram = details.CardCryptogram
                     };
 
                 case ScpMode.Scp03:
@@ -35,7 +36,8 @@ namespace Securo.GlobalPlatform.SecureMessaging
                         {
                             CardChallenge = pseudoRandomDetails.CardChallenge,
                             SequenceCounter = pseudoRandomDetails.SequenceCounter,
-                            ScpInfo = new ScpInfo() { ScpIdentifier = (byte)ScpMode.Scp03, ImplementationOptions = scpOption }
+                            ScpInfo = new ScpInfo() { ScpIdentifier = (byte)ScpMode.Scp03, ImplementationOptions = scpOption },
+                            CardCryptogram = pseudoRandomDetails.CardCryptogram
                         };
                     }
 
@@ -43,7 +45,8 @@ namespace Securo.GlobalPlatform.SecureMessaging
                     return new SecureSessionDetails()
                     {
                         CardChallenge = trueRandomDetials.CardChallenge,
-                        ScpInfo = new ScpInfo() { ScpIdentifier = (byte)ScpMode.Scp03, ImplementationOptions = scpOption }
+                        ScpInfo = new ScpInfo() { ScpIdentifier = (byte)ScpMode.Scp03, ImplementationOptions = scpOption },
+                        CardCryptogram = trueRandomDetials.CardCryptogram
                     };
 
                 default:

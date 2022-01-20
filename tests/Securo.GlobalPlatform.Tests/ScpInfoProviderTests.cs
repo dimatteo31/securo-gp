@@ -2,11 +2,12 @@
 using Org.BouncyCastle.Utilities.Encoders;
 using Securo.GlobalPlatform.Model;
 using Securo.GlobalPlatform.SecureMessaging;
+using System.Linq;
 
 namespace Securo.GlobalPlatform.Tests
 {
     [TestFixture()]
-    public class ScpInfoProviderTests
+    public class ScpInfoProvider2Tests
     {
         [TestCase("664C734A06072A864886FC6B01600C060A2A864886FC6B02020101630906072A864886FC6B03640B06092A864886FC6B040105650B06092B8510864864020103660C060A2B060104012A026E0102",
             0x01, 0x05)]

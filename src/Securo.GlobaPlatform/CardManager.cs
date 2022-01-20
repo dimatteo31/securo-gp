@@ -17,10 +17,13 @@ namespace Securo.GlobalPlatform
         private readonly ICardResponseParser cardResponseParser;
         private readonly ISecureContextProviderFactory secureContextProviderFactory;
         private ISecureContextProvider secureContextProvider;
+        private IAuthenticationCryptogramProvider<Scp03CardAuthenticationCryptogramData> cardAuthenticationCryptogramProvider;
 
         private ScpInfo ScpInfo { get; set; }
         public SecureSessionDetails SecureSessionDetails { get; private set; }
         public string Aid { get; private set; }
+
+        const string GetDataApdu = "80CA006600";
 
         public CardManager(
           IApduTransmit apduTransmit,
@@ -40,7 +43,7 @@ namespace Securo.GlobalPlatform
             if (cardResponse.StatusWord == 0x9000)
             {
                 this.Aid = aid;
-                var cardRecogntionData = apduTransmit.Send("80CA006600");
+                var cardRecogntionData = apduTransmit.Send(GetDataApdu);
                 if (cardRecogntionData.StatusWord == 0x9000)
                 {
                     this.ScpInfo = this.scpInfoProvider.Provide(Hex.Decode(cardRecogntionData.Data));
@@ -68,15 +71,6 @@ namespace Securo.GlobalPlatform
                 this.secureContextProvider = this.secureContextProviderFactory
                     .Provide((ScpMode)this.SecureSessionDetails.ScpInfo.ScpIdentifier);
                 this.secureContextProvider.InitializeSecureContext(this.SecureSessionDetails);
-
-                // TODO: implement CAC check
-                /*var cac = cardAuthCrytpogramProvider.Calculate(this.SecureSessionDetails.SessionKeys.EncryptionKey,
-                    new Scp02CardAuthenticationCryptogram()
-                    {
-                        CardChallenge = responseData.CardChallenge,
-                        Counter = responseData.SequenceCounter,
-                        HostChallenge = hostChallenge
-                    });*/
             }
             else
             {
@@ -86,7 +80,6 @@ namespace Securo.GlobalPlatform
 
         public void ExternalAuthenticate(SecurityLevel securityLevel)
         {
-            this.secureContextProvider.InitializeSecureContext(this.SecureSessionDetails);
             var hostAuthCryptogram = this.secureContextProvider.CalculateHostCrypogram().Result;
             var command = new ExternalAuthenticateCommand((byte)securityLevel, hostAuthCryptogram).Build();
             var wrappedCommand = this.secureContextProvider.Wrap(SecurityLevel.Mac, command).Result;

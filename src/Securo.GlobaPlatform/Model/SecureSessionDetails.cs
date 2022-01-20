@@ -10,5 +10,6 @@
         public string CardChallenge { get; set; }
         public string SequenceCounter { get; set; }
         public ScpInfo ScpInfo { get; set; }
+        public string CardCryptogram { get; set; }
     }
 }

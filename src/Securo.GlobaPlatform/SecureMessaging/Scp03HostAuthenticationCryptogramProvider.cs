@@ -22,7 +22,7 @@ namespace Securo.GlobalPlatform.SecureMessaging
             return this.macProviders.Single(x => x.Name == MacProvider.AesCmacProvider).Generate(string.Empty, key, inputData).Substring(0, HacLengthInBytes * 2);
         }
 
-        public bool Verify(string cardCryptogram)
+        public bool Verify(string key, Scp03HostAuthenticationCryptogramData crytpogramDetails, string cardCryptogram)
         {
             throw new System.NotImplementedException();
         }
