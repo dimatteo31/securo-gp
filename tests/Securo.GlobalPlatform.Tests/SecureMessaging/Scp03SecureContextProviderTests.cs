@@ -36,6 +36,7 @@ namespace Securo.GlobalPlatform.Tests.SecureMessaging
             {
                 HostChallenge = "A08E3F160A919F31",
                 CardChallenge = "F27B765529C7F332",
+                CardCryptogram = "0b0324e5fea58468"
             });
 
             var wrappedCommand = cut.Wrap(SecurityLevel.Mac, command).Result;
@@ -57,7 +58,8 @@ namespace Securo.GlobalPlatform.Tests.SecureMessaging
             cut.InitializeSecureContext(new SecureSessionDetails()
             {  
                 HostChallenge = "9DB1571B7D76687C",
-                CardChallenge = "4990734952AF8D49"
+                CardChallenge = "4990734952AF8D49",
+                CardCryptogram = "a917369cbee5d449"
             });
 
             var wrappedCommand1 = cut.Wrap(SecurityLevel.Mac, command1).Result;
@@ -84,10 +86,10 @@ namespace Securo.GlobalPlatform.Tests.SecureMessaging
             {
                 HostChallenge = "09A6876A18A28878",
                 CardChallenge = "D16D0B2E63C700D0",
-                //Scp = ScpMode.Scp03,
                 MacIv = "00000000000000000000000000000000",
                 EncryptionIv = "00000000000000000000000000000000",
-                IvCounter = 1
+                IvCounter = 1,
+                CardCryptogram = "c31ca1de694d3d08"
             });
 
             var wrappedCommand1 = cut.Wrap(SecurityLevel.Mac, command1).Result;
@@ -116,10 +118,10 @@ namespace Securo.GlobalPlatform.Tests.SecureMessaging
             {
                 HostChallenge = "CE39F278E3B1FF0D",
                 CardChallenge = "4A38A31EDB10B005",
-                //Scp = ScpMode.Scp03,
                 MacIv = "00000000000000000000000000000000",
                 EncryptionIv = "00000000000000000000000000000000",
-                IvCounter = 1
+                IvCounter = 1,
+                CardCryptogram = "40530d0f0d638ac5"
             });
 
             var wrappedCommand1 = cut.Wrap(SecurityLevel.Mac_RMac, command1).Result;
@@ -148,10 +150,10 @@ namespace Securo.GlobalPlatform.Tests.SecureMessaging
             {
                 HostChallenge = "7E7B7BD6BBACED6B",
                 CardChallenge = "DF5BF9B50B977F64",
-                //Scp = ScpMode.Scp03,
                 MacIv = "00000000000000000000000000000000",
                 EncryptionIv = "00000000000000000000000000000000",
-                IvCounter = 1
+                IvCounter = 1,
+                CardCryptogram = "d0e982bc2f7192a6"
             });
 
             var wrappedCommand1 = cut.Wrap(SecurityLevel.Mac, command1).Result;
@@ -176,44 +178,16 @@ namespace Securo.GlobalPlatform.Tests.SecureMessaging
             {
                 HostChallenge = "7E7B7BD6BBACED6B",
                 CardChallenge = "DF5BF9B50B977F64",
-                //Scp = ScpMode.Scp03,
                 MacIv = "00000000000000000000000000000000",
                 EncryptionIv = "00000000000000000000000000000000",
-                IvCounter = 1
+                IvCounter = 1,
+                CardCryptogram = "d0e982bc2f7192a6"
             });
 
             var cac = cut.CalculateHostCrypogram().Result;
 
+            // assert
             StringAssert.AreEqualIgnoringCase(expectedCardCryptogram, cac);
         }
     }
 }
-/* level 33
-Command --> 8050000008 7E7B7BD6BBACED6B 00
-Wrapped command --> 80500000087E7B7BD6BBACED6B00
-Response <-- 00000346020614090044010360 DF5BF9B50B977F64 D0E982BC2F7192A6 9000
-Unwrapped response <-- 00000346020614090044010360DF5BF9B50B977F64D0E982BC2F7192A69000
-Command --> 8482330010 EAE9727A80E0C4ED 6FD4D796189BFA61
-Wrapped command --> 8482330010EAE9727A80E0C4ED6FD4D796189BFA61
-Response <-- 9000
-Unwrapped response <-- 9000
-get_status -element 20
-Command --> 80F22002024F0000
-Wrapped command --> 84F22002182E6E5F29A91803C860002029900ADB6B635596FC98472E2B00
-Response <-- E7044E45CF0177E526398B2DD243B6E48E68E4AA466468139000
-*/
-/* Level 11
-Command-- > 8050000008 CE39F278E3B1FF0D 00
-Wrapped command --> 8050000008CE39F278E3B1FF0D00
-Response <-- 0000034602061409004401 03 60 4A38A31EDB10B005 40530D0F0D638AC5 9000
-Unwrapped response <-- 000003460206140900440103604A38A31EDB10B00540530D0F0D638AC59000
-Command --> 8482110010 3962B9B10D337B17 E3F6580BF9F4AE62
-Wrapped command --> 84821100103962B9B10D337B17E3F6580BF9F4AE62
-Response <-- 9000
-Unwrapped response <-- 9000
-get_status -element 20
-Command --> 80F22002024F0000
-Wrapped command --> 84F220020A4F00C0375B0F0928C6D200
-Response <-- E30D4F07A00000015153509F700101 E64A55A6C79EE82F 9000
-*/
-// 0110 0000

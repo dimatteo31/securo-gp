@@ -1,4 +1,5 @@
-﻿using Securo.GlobalPlatform.Enums;
+﻿using Org.BouncyCastle.Crypto.Parameters;
+using Securo.GlobalPlatform.Enums;
 using Securo.GlobalPlatform.Interfaces;
 using Securo.GlobalPlatform.Model;
 using System;
@@ -32,19 +33,26 @@ namespace Securo.GlobalPlatform.SecureMessaging
 
         private string CalculateSessionKey(SessionKeyType sessionKeyType, string key, string hostChallenge, string cardChallenge)
         {
-            if (key.Length / 2 != AesKeySize/8)
-            {
-                throw new InvalidOperationException($"Key size { key.Length / 2 } not supported");
-            }
-
+            var keySizeInBits = ((key.Length / 2) * 8);
+            var keySizeHex = keySizeInBits.ToString("X4");
             var input = "0000000000000000000000";
             input += ((byte)sessionKeyType).ToString("X2");
             input += "00";
-            input += "0080";
-            input += "01";
-            input += $"{hostChallenge}{cardChallenge}";
+            input += keySizeHex;
             var provider = this.macProviders.Single(x => x.Name == MacProvider.AesCmacProvider);
-            return provider.Generate(string.Empty, key, input);
+            if (keySizeInBits > AesKeySize)
+            {
+                var input01 = input + $"01{hostChallenge}{cardChallenge}";
+                var input02 = input + $"02{hostChallenge}{cardChallenge}";
+                var sessionKey = provider.Generate(string.Empty, key, input01);
+                sessionKey += provider.Generate(string.Empty, key, input02);
+                return sessionKey.Substring(0, 2* keySizeInBits/8);
+            }
+            else
+            {
+                input += $"01{hostChallenge}{cardChallenge}";
+                return provider.Generate(string.Empty, key, input);
+            }
         }
     }
 }

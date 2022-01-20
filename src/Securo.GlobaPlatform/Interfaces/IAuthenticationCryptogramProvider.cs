@@ -6,6 +6,6 @@ namespace Securo.GlobalPlatform.Interfaces
     public interface IAuthenticationCryptogramProvider<T>
     {
         string Calculate(string key, T crytpogramDetails);
-        bool Verify(string cardCryptogram);
+        bool Verify(string key, T crytpogramDetails, string cryptogramToVerify);
     }
 }

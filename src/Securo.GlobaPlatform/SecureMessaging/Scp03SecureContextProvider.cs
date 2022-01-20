@@ -16,6 +16,7 @@ namespace Securo.GlobalPlatform.SecureMessaging
         private readonly IScp03Level1SecureMessagingWrapper scp03Level1SecureMessagingWrapper;
         private readonly IScp03Level3SecureMessagingWrapper scp03Level3SecureMessagingWrapper;
         private readonly IAuthenticationCryptogramProvider<Scp03HostAuthenticationCryptogramData> hostAuthenticationCryptogramProvider;
+        private readonly IAuthenticationCryptogramProvider<Scp03CardAuthenticationCryptogramData> cardAuthenticationCryptogramProvider;
 
         public Scp03SecureContextProvider(
             IEnumerable<IMacProvider> macProviders,
@@ -27,6 +28,7 @@ namespace Securo.GlobalPlatform.SecureMessaging
             this.scp03SessionKeysProvider = scp03SessionKeysProvider;
             
             this.hostAuthenticationCryptogramProvider = new Scp03HostAuthenticationCryptogramProvider(this.macProviders);
+            this.cardAuthenticationCryptogramProvider = new Scp03CardAuthenticationCryptogramProvider(this.macProviders);
             this.scp03Level1SecureMessagingWrapper = new Scp03Level1SecureMessagingWrapper(this.macProviders);
             this.scp03Level3SecureMessagingWrapper = new Scp03Level3SecureMessagingWrapper(this.cryptoProviders);
         }
@@ -51,6 +53,18 @@ namespace Securo.GlobalPlatform.SecureMessaging
             this.SecureSessionDetails.SessionKeys = this.scp03SessionKeysProvider.CalculateSessionKeys(
                 this.SecureSessionDetails.HostChallenge,
                 this.SecureSessionDetails.CardChallenge);
+
+            var isVerfied = this.cardAuthenticationCryptogramProvider.Verify(
+                this.SecureSessionDetails.SessionKeys.MacKey, new Scp03CardAuthenticationCryptogramData()
+                {
+                    CardChallenge = this.SecureSessionDetails.CardChallenge,
+                    HostChallenge = this.SecureSessionDetails.HostChallenge
+                }, this.SecureSessionDetails.CardCryptogram);
+
+            if (!isVerfied)
+            {
+                throw new InvalidOperationException("Invalid card cryptogram");
+            }
         }
 
         public Task<string> Unwrap(SecurityLevel securityLevel, string response)

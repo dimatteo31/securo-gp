@@ -22,7 +22,7 @@ namespace Securo.GlobalPlatform.SecureMessaging
             return this.retailMac.Generate(IvZeros, key, input);
         }
 
-        public bool Verify(string cardCryptogram)
+        public bool Verify(string key, Scp02HostAuthenticationCryptogramData crytpogramDetails, string cardCryptogram)
         {
             throw new System.NotImplementedException();
         }
