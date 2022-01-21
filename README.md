@@ -2,14 +2,21 @@
 This project implements Global Platform (https://globalplatform.org) Secure Channel Protcol (SCP) in version SCP02 and SCP03.
 
 ## Securo.GlobaPlatform
-All security levels are supported for SCP03:
+### Supported cards
+Any card compliant with GP2.1.1 shall be handled. 
+### Secure Channel Protocols
+For SCP02 following security levels are supported:
+* C-DECRYPTION and C-MAC
+* C-MAC
+* No secure messaging
+
+For SCP03 following security levels are supported:
 * C-DECRYPTION, R-ENCRYPTION, CMAC and R-MAC
 * C-DECRYPTION, C-MAC and R-MAC
 * C-MAC and R-MAC
 * C-DECRYPTION and C-MAC
 * C-MAC
 * No secure messaging
-
 ## Securo.GlobaPlatform.Application
 Simple CLI script application for handling GP smart card. To run the application following args shall be passed:
 ``` 
@@ -24,6 +31,7 @@ Input script supports command set described in table below
 | set_keys 	| Sets GP keys [enc\|mac\|dek]                                    	|
 | select   	| Selects GP applet                                               	|
 | open     	| Opens secure channel with GP card                               	|
+| help      | Displays help for given command (i.e. help connect)               |
 
 Sample script can have the following command set. It opens secure channel with GP Card Manager with transport keys. The requested security level is Mac (0x01).
 ``` 
